@@ -16,8 +16,8 @@ class ResourceController extends Controller
         $this->model_type = $request->get('model');
         $this->model_id = $request->get('id');
         $this->action = $request->get('action');
-        $this->newPosition = $request->get('newPosition');;
-        $this->modelImageCollection = $request->get('modelImageCollection');;
+        $this->newPosition = $request->get('newPosition');
+        $this->modelImageCollection = $request->get('modelImageCollection');
         $this->model = $this->action == 'restore' ? $this->model_type::withTrashed()->find($this->model_id) : $this->model_type::find($this->model_id);
         $this->resource_request = $request;
     }
