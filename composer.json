@@ -20,7 +20,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Doorons\\DoUI\\BladeServiceProvider"
+                "Doorons\\DoUI\\BladeServiceProvider",
+                "Doorons\\DoUI\\ResourceServiceProvider"
             ]
         }
     }
