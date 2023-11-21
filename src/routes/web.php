@@ -4,5 +4,5 @@
 $namespace = "Doorons\DoUI\Http\Controllers";
 
 Route::group(['namespace' => $namespace, 'prefix' => 'dashboard'], function () {
-    Route::get('/resources/{type}', 'ResourceController@parse')->name('resources.action');
+    Route::post('/resources/{type}', 'ResourceController@parse')->name('resources.action');
 });

@@ -4,7 +4,7 @@ namespace Doorons\DoUI\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Controllers\Controller;
+use App\Http\Controllers\Controller;
 
 // Ajax Only controller!
 class ResourceController extends Controller
