@@ -15,10 +15,7 @@
     "autoload": {
         "psr-4": {
             "doorons\\do-ui\\": "src/"
-        },
-        "classmap": [
-            "tests"
-        ]
+        }
     },
     "extra": {
         "laravel": {
