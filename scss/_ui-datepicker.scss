@@ -1,0 +1,196 @@
+.ui-datepicker {
+    font-size: 0.875rem !important;
+    font-family: inherit;
+    min-width: 10rem;
+    width: auto;
+}
+
+.ui-datepicker table {
+    font-size: 0.875rem !important;
+    margin-bottom: 0;
+}
+
+.ui-datepicker td {
+    font-size: 0.875rem !important; 
+}
+
+.ui-datepicker td,
+.ui-datepicker th {
+    text-align: center;
+    padding: 0;
+}
+.ui-datepicker th {
+    width: 35px;
+    height: 35px;
+}
+
+.ui-widget.ui-widget-content {
+    // background: $background__body-grey;
+    color: black;
+    border-color:  rgba(0, 0, 0, 0.15);
+    padding: 4px;
+    border-radius: 4px;
+    margin-top: 1px;
+
+    &:before {
+        content: "";
+        display: inline-block;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-bottom: 7px solid #ccc;
+        border-bottom-color: rgba(0, 0, 0, 0.2);
+        position: absolute;
+        top: -7px;
+        left: 6px;
+    }
+
+    &:after {
+        content: "";
+        display: inline-block;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid #fff;
+        position: absolute;
+        top: -6px;
+        left: 7px;
+    }
+}
+
+.ui-datepicker .ui-widget-header {
+    border: none;
+    background: #fff;
+    color: black;
+    padding: 0;
+
+    a {
+        color: inherit;
+    }
+}
+
+.ui-datepicker .ui-datepicker-title {
+    line-height: 35px;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+    border-color: transparent;
+    background: none;
+    color: black;
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    background-color: $m_primary;
+    border-color: $m_primary;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+
+    &.ui-state-hover {
+        background-color: $m_primary;
+        border-color: $m_primary;
+    }
+}
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.1);
+    color: red;
+
+    &.ui-state-hover {
+        background-color: $m_secondary;
+        border-color: $m_secondary;
+    }
+}
+
+.ui-datepicker select.ui-datepicker-year {
+    margin-left: 5px;
+}
+
+.ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+    background: white;
+    color: $m_primary;
+    border: none;
+    outline: none;
+    padding: 3px 7px;
+    box-shadow: none !important;
+    -webkit-appearance: auto;
+    
+    &:focus {
+        box-shadow: none !important;
+    }
+}
+
+.ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span {
+    background: none;
+}
+
+.ui-datepicker .ui-datepicker-prev {
+    width: 35px;
+    height: 35px;
+    left: 0;
+    top: 0;
+
+    &:after {
+        content: "\f053";
+        @include fontawesome();
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.875rem;
+    }
+}
+
+.ui-datepicker .ui-datepicker-next {
+    width: 35px;
+    height: 35px;
+    right: 0;
+    top: 0;
+    
+    &:after {
+        content: "\f054";
+        @include fontawesome();
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.875rem;
+    }
+}
+
+.ui-datepicker .ui-datepicker-next-hover {
+    right: 0;
+    top: 0;
+}
+
+.ui-datepicker .ui-datepicker-prev-hover {
+    left: 0;
+    top: 0;
+}
+
+.ui-state-hover, 
+.ui-widget-content .ui-state-hover, 
+.ui-widget-header .ui-state-hover, 
+.ui-state-focus, 
+.ui-widget-content .ui-state-focus, 
+.ui-widget-header .ui-state-focus 
+.ui-button:hover, .ui-button:focus 
+{
+    border-color: #eee;
+    background: #eee;
+    font-weight: normal;
+    // color: $color__body-alt;
+    cursor: pointer;
+    transition: none;
+}
+
+// Offset fix
+.contest #ui-datepicker-div {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
