@@ -1,0 +1,30 @@
+{
+    "name": "doorons/do-ui",
+    "description": "DO UI",
+    "keywords": [],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Door ons",
+            "email": "info@doorons.nl"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "doorons\\do-ui\\": "src/"
+        },
+        "classmap": [
+            "tests"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "doorons\\DoUI\\BladeServiceProvider"
+            ]
+        }
+    }
+}
