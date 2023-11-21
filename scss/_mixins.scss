@@ -1,0 +1,63 @@
+@mixin clearfix() {
+  &::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+}
+
+@mixin fontawesome($weight: 400) {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: $weight;
+}
+
+@mixin zoomIn() {
+    transition: transform .2s ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+@mixin xl {
+  @media (max-width: 1440px) {
+  @content;
+}
+}
+
+@mixin lg {
+@media (max-width: 1279px) {
+  @content;
+}
+}
+
+@mixin md {
+@media (max-width: 991px) {
+  @content;
+}
+}
+
+@mixin sm {
+@media (max-width: 767px) {
+  @content;
+}
+}
+
+@mixin xs {
+  @media (max-width: 500px) {
+      @content;
+  }
+}
+
+@mixin xxs {
+  @media (max-width: 374px) {
+      @content;
+  }
+}

@@ -1,0 +1,107 @@
+.hidden_field {
+    display: none;
+}
+
+.jscolor {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.row.d-block {
+    display: flex !important;
+}
+
+.table .subtitle {
+    display: block;
+}
+
+.info-warning {
+    color: $orange;
+}
+
+.form-check.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+
+    * {
+        opacity: 0.5;
+    }
+}
+
+.dropdown-menu {
+    hr {
+        margin: 7px 0;
+    }
+}
+
+
+
+.delete_model-image {
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+}
+
+.variation-color {
+    width: 20px;
+    height: 20px;
+    display: block;
+    border-radius: 100%;
+}
+
+.semi-disabled {
+    pointer-events: initial !important;
+}
+
+.model-image,.product-image {
+    display: block;
+    max-width: 100%;
+}
+
+.identity-image {
+    @extend .model-image;
+    max-height: 120px;
+}
+
+.uploaded-image {
+    @extend .model-image;
+    max-height: 120px;
+    max-width: 50%;
+}
+
+.clearfix {
+    @include clearfix;
+}
+
+hr {
+    width: 100%;
+}
+
+.was-validated textarea.form-control:invalid, textarea.form-control.is-invalid {
+    ~ div[class*="cke_editor_"].cke {
+        border-color: $red;
+    }
+}
+
+// Color dot
+.color-dot {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.line-height-1 {
+    display: block;
+    line-height: 1.1;
+}
+
+.required-star {
+    &:after {
+        content: "*";
+        color: red;
+        margin-left: 3px;
+    }
+}
