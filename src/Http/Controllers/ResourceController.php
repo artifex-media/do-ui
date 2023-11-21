@@ -55,11 +55,9 @@ class ResourceController extends Controller
     public function duplicate()
     {
 
-        $count = $this->model->count();
-        
         $new_model = $this->model->replicate(['media']);
         
-        $new_model->title = $new_model->title.' '.$count + 1;
+        $new_model->title = str_replace(' (duplicate)','',$new_model->title).' (duplicate)';
         $new_model->status = '0';
         $new_model->uuid = Str::uuid();
         $result = $new_model->push();
