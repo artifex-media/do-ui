@@ -10,6 +10,8 @@ class BladeServiceProvider extends ServiceProvider //Change class name here
     public function boot(): void
     {
 
+        $this->loadRoutesFrom(__DIR__."/routes/web.php");
+
         Blade::directive('button_duplicate', function () {
             return '<a data-toggle="tooltip" href="" data-toggle="tooltip" title="Duplicate" data-action="duplicate" class="btn btn-sm btn-icon-sm _resource-action"><i class="far fa-clone"></i></a>';
         });
