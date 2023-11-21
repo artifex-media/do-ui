@@ -1,5 +1,5 @@
 <?php
-namespace doorons\DoUI; //Change namespace here
+namespace Doorons\DoUI; //Change namespace here
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;

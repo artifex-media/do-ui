@@ -14,13 +14,13 @@
     },
     "autoload": {
         "psr-4": {
-            "doorons\\do-ui\\": "src/"
+            "Doorons\\DoUI\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "doorons\\DoUI\\BladeServiceProvider"
+                "Doorons\\DoUI\\BladeServiceProvider"
             ]
         }
     }
