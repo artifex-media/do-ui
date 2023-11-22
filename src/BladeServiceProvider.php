@@ -43,21 +43,67 @@ class BladeServiceProvider extends ServiceProvider //Change class name here
 
         // $model->slug = $model->slug, $page->slug, etc. Kan ook id zijn of iets anders, afhankelijk van de route (MODEL.show,$param)
         // pages = route prefix van de model, bijv: pages, users, packages, partners
-        // @button_preview($model->slug.',pages')
+        // Page = model naam, Page, Product, Brand, etc.
+        // @button_preview($model->slug.',pages,Page')
         Blade::directive('button_preview', function ($expression) {
             return '<?php
-                list($arg1, $arg2) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
-                echo "<a data-toggle=\"tooltip\" title=\"Preview\" href=\"".route("$arg2.show",$arg1)."\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
+                list($arg1, $arg2, $arg3) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
+                $model = $arg3::find($arg1);
+                $model_type = $model->type;
+                $route = $model_type == "landing" ? route("$arg2.landing") : route("$arg2.show",$model->slug);
+                echo "<a data-toggle=\"tooltip\" title=\"Preview\" href=\"".$route."\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
             ?>';
         });
 
+        Blade::directive('button_preview_link', function ($expression) {
+            return '<?php
+            list($url) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
+            echo "<a data-toggle=\"tooltip\" title=\"Preview\" href=\"".$url."\" target=\"_blank\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
+   
+            ?>';
+        });
+
+        Blade::directive('button_save', function () {
+            return '<?php
+            echo "<button class=\"btn btn-sm btn-secondary ml-2\" type=\"submit\"><i class=\"fad fa-save d-none d-sm-inline-block\"></i>&nbsp;Save</button>";
+   
+            ?>';
+        });
+
+        Blade::directive('searchable_form', function () {
+            return '<?php 
+            
+            $class = isset($_GET["search"]) && $_GET["search"] != "" ? "input-group-focus" : "";
+            $class2 = isset($_GET["search"]) && $_GET["search"] != "" ? "input-focus" : "";
+            $value = isset($_GET["search"]) && $_GET["search"] != "" ? $_GET["search"] : "";
+
+            echo
+            "<div class=\"input-group input-group-sm ".$class." mt-3 my-sm-0 w-auto\">
+                <div class=\"input-group-prepend\">
+                    <div class=\"input-group-text\"><i class=\"fas fa-search\"></i></div>
+                </div>
+                <form method=\"get\">
+                    <input type=\"text\" name=\"search\" id=\"search\" class=\"form-control-search ".$class2." form-control form-control-sm\" placeholder=\"Search\" value=\"".$value."\">
+                </form>
+            </div>";
+            ?>';
+        });
+
+        // Parent models:
         // $model->id = $model->id, $page->id, $partner->id, etc.
         // pages = route prefix van de model, bijv: pages, users, packages, partners
         // @button_edit($model->id.',pages')
+
+        // Submodels:
+        // $brand->id = parent id, bijv $brand->id, $deal->id.
+        // brands.deals = parent route prefix en submodel route prefix
+        // @button_edit($brand->id.'-'.$deal->id.',brands.deals')
+
         Blade::directive('button_edit', function ($expression) {
             // dd($array);
             return '<?php
                 list($arg1, $arg2) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
+                $arg1 = explode("-",$arg1);
                 echo "<a data-toggle=\"tooltip\" title=\"Edit\" href=\"".route("$arg2.edit",$arg1)."\" data-toggle=\"tooltip\" title=\"Edit\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-edit\"></i></a>";
             ?>';
         });
