@@ -52,17 +52,22 @@ class BladeServiceProvider extends ServiceProvider //Change class name here
                 $new = strtolower($arg1);
                 $param = $arg2 != "" ? $arg2 : false;
                 $route = $param ? route($arg1."s.create",$param) : route($arg1."s.create"); 
+                $button = $arg1 != "coupon" && $arg1 != "alertableembed" && $arg1 != "alertable" ? true : false;
                 
                 echo "<div class=\"card-header border-bottom d-flex justify-content-between sticky-top sticky-md-top-0 flex-column flex-md-row align-items-md-center\">
                     <div class=\"heading\">
                         <h3 class=\"h5 mb-0 d-flex align-items-center\">".$title."</h3>
                         ".$breadcrumb_layout."
-                    </div>
+                    </div>";
 
-                    <div class=\"buttons d-flex align-items-stretch mt-2 mt-md-0\">
+                if($button) {
+                    echo "<div class=\"buttons d-flex align-items-stretch mt-2 mt-md-0\">
                         <a href=\"".$route."\" class=\"btn btn-sm btn-secondary ml-md-auto\"><i class=\"fad fa-plus-circle\"></i> New ".$new."</a></h3>
 
-                    </div>
+                    </div>";
+                }
+
+                echo "
                 </div>
                 ";
 
@@ -75,7 +80,7 @@ class BladeServiceProvider extends ServiceProvider //Change class name here
 
             return '<?php
             
-            list($arg1,$arg2,$arg3) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
+            list($arg1,$arg2,$arg3) = explode(\',\',str_replace([\'(\',\')\',\'\'], \'\', ' . $expression . '));
             $param = $arg3 != "" ? $arg3 : false;            
 
             $breadcrumb_layout = view("layouts.breadcrumb", compact("breadcrumb"))->render();
