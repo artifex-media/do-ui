@@ -16,6 +16,123 @@ class BladeServiceProvider extends ServiceProvider //Change class name here
             return '<a data-toggle="tooltip" href="" data-toggle="tooltip" title="Duplicate" data-action="duplicate" class="btn btn-sm btn-icon-sm _resource-action"><i class="far fa-clone"></i></a>';
         });
 
+        Blade::directive('index_tabs', function ($expression) {
+            return '
+            <?php
+            list($arg1,$arg2) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
+            $param = $arg2 != "" ? $arg2 : false;            
+
+            $index = $param ? route($arg1.".index",$param) : route("$arg1.index",);
+            $archive = $param ? route($arg1.".archive",$param) : route("$arg1.archive");
+            $trashed = $param ? route($arg1.".trashed",$param) : route("$arg1.trashed");
+
+            $index_active = $current_route == $arg1.".index" ? "active" : "";
+            $archive_active = $current_route == $arg1.".archive" ? "active" : "";
+            $trashed_active = $current_route == $arg1.".trashed" ? "active" : "";
+
+            echo "
+            <div class=\"btn-group\">
+            <a href=\"".$index."\" class=\"btn btn-white btn-sm ".$index_active."\">All</a>
+            <a href=\"".$archive."\" class=\"btn btn-white btn-sm ".$archive_active."\">Archived</a>
+            <a href=\"".$trashed."\" class=\"btn btn-white btn-sm ".$trashed_active."\">Trashed</a>
+            </div>";
+
+            ?>
+            ';
+        });
+
+        Blade::directive('index_header', function ($expression) {
+
+        
+            return '<?php 
+
+                list($arg1,$arg2) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
+                $breadcrumb_layout = view("layouts.breadcrumb", compact("breadcrumb"))->render();
+                $title = ucfirst($arg1)."s";
+                $new = strtolower($arg1);
+                $param = $arg2 != "" ? $arg2 : false;
+                $route = $param ? route($arg1."s.create",$param) : route($arg1."s.create"); 
+                
+                echo "<div class=\"card-header border-bottom d-flex justify-content-between sticky-top sticky-md-top-0 flex-column flex-md-row align-items-md-center\">
+                    <div class=\"heading\">
+                        <h3 class=\"h5 mb-0 d-flex align-items-center\">".$title."</h3>
+                        ".$breadcrumb_layout."
+                    </div>
+
+                    <div class=\"buttons d-flex align-items-stretch mt-2 mt-md-0\">
+                        <a href=\"".$route."\" class=\"btn btn-sm btn-secondary ml-md-auto\"><i class=\"fad fa-plus-circle\"></i> New ".$new."</a></h3>
+
+                    </div>
+                </div>
+                ";
+
+                ?>
+            ';
+            
+        });
+
+        Blade::directive('edit_header', function ($expression) {
+
+            return '<?php
+            
+            list($arg1,$arg2,$arg3) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
+            $param = $arg3 != "" ? $arg3 : false;            
+
+            $breadcrumb_layout = view("layouts.breadcrumb", compact("breadcrumb"))->render();
+            $route = $param ? route($arg1."s.index",$param) : route($arg1."s.index");
+
+            echo "<div class=\"card-header border-bottom d-flex justify-content-between sticky-top sticky-md-top-0 flex-column flex-md-row align-items-md-center\">
+                <div class=\"heading\">
+                    <h3 class=\"h5 mb-0 d-flex align-items-center\">".$arg2."</h3>
+                    ".$breadcrumb_layout."
+                </div>
+                
+                <div class=\"buttons d-flex align-items-stretch mt-2 mt-md-0\">
+                    <a class=\"btn btn-sm btn-outline-secondary\" href=\"".$route."\"><i class=\"far fa-undo-alt d-none d-sm-inline-block\"></i> Go back</a></button>
+                    <button class=\"btn btn-sm btn-secondary ml-2\"><i class=\"fad fa-save d-none d-sm-inline-block\"></i> Save</button>
+                </div>
+            </div>";
+
+            ?>
+            ';
+
+            
+        });
+
+
+        Blade::directive('create_header', function ($expression) {
+
+        
+            return '<?php
+            
+            list($arg1,$arg2) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
+            $breadcrumb_layout = view("layouts.breadcrumb", compact("breadcrumb"))->render();
+            $param = $arg2 != "" ? $arg2 : false;            
+            $route = $param ? route($arg1."s.index",$param) : route($arg1."s.index");
+
+            echo "<div class=\"card-header border-bottom d-flex justify-content-between sticky-top sticky-md-top-0 flex-column flex-md-row align-items-md-center\">
+            <div class=\"heading\">
+                <h3 class=\"h5 mb-0 d-flex align-items-center\">New ".$arg1."</h3>
+                ".$breadcrumb_layout."
+            </div>
+            
+            <div class=\"buttons d-flex align-items-stretch mt-2 mt-md-0\">
+                <a class=\"btn btn-sm btn-outline-secondary\" href=\"".$route."\"><i class=\"far fa-undo-alt d-none d-sm-inline-block\"></i> Go back</a></button>
+                <button class=\"btn btn-sm btn-secondary ml-2\"><i class=\"fad fa-save d-none d-sm-inline-block\"></i> Save</button>
+
+            </div>
+        </div>";
+
+            ?>
+            ';
+
+            
+        });
+
+
+
+
+
         // $action = variable vanuit de model controller. Bijv: archive, trashed, etc. (Waar je je bevindt in index overzicht)
         // pages = route prefix van de model, bijv: pages, users, packages, partners
         // @button_archive($action.',pages')
