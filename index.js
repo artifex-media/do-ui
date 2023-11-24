@@ -222,10 +222,6 @@ $('._resource-action').click(function(e) {
             return false;    //<---- Add this line
         }
         });
-    
-        $('#navHamburger').on('click', function() {
-            $('#sidebarContent').toggleClass('toggled');
-        });
 
     // Reposition models
     $('.sortable tbody').sortable({
