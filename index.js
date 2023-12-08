@@ -149,15 +149,15 @@ $('._resource-action').click(function(e) {
             type: AjaxType,
             data: 'model='+Model+'&id='+ModelID+'&action='+Action+'&modelImageCollection='+ModelImageCollection,
             success: function success(result) {
-              if ($.trim(result) == 'true') {
-
-                if(Action == 'delete' || Action == 'archive' || Action == 'restore' || Action == 'unarchive' || Action == 'deletemedia') {
-                  recordRow.remove();
-                }
-                
-
-                if(Action == 'duplicate') {
-                    window.location.href=window.location.href;
+                console.log(result);
+              if ($.trim(result) == 'true' || result == 'true') {
+                  if(Action == 'delete' || Action == 'archive' || Action == 'restore' || Action == 'unarchive' || Action == 'deletemedia') {
+                      recordRow.remove();
+                    }
+                    
+                    if(Action == 'duplicate') {
+                    window.location.reload();
+                    // window.location.href=window.location.href;
                 } else {
                   Swal.fire({
                     icon: 'success',
@@ -221,6 +221,10 @@ $('._resource-action').click(function(e) {
             $(this).parent('form').submit();
             return false;    //<---- Add this line
         }
+        });
+    
+        $('#navHamburger').on('click', function() {
+            $('#sidebarContent').toggleClass('toggled');
         });
 
     // Reposition models
