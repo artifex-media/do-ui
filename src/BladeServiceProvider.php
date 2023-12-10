@@ -173,14 +173,14 @@ class BladeServiceProvider extends ServiceProvider //Change class name here
                 $model = $arg3::find($arg1);
                 $model_type = $model->type;
                 $route = $model_type == "landing" ? route("$arg2.landing") : route("$arg2.show",$model->slug);
-                echo "<a target="_blank" data-toggle=\"tooltip\" title=\"Preview\" href=\"".$route."\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
+                echo "<a target=\"_blank\" data-toggle=\"tooltip\" title=\"Preview\" href=\"".$route."\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
             ?>';
         });
 
         Blade::directive('button_preview_link', function ($expression) {
             return '<?php
             list($url) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
-            echo "<a target="_blank" data-toggle=\"tooltip\" title=\"Preview\" href=\"".$url."\" target=\"_blank\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
+            echo "<a target=\"_blank\" data-toggle=\"tooltip\" title=\"Preview\" href=\"".$url."\" target=\"_blank\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
    
             ?>';
         });
