@@ -174,9 +174,13 @@ class BladeServiceProvider extends ServiceProvider //Change class name here
                 $model_type = $model->type;
                 $route = $model_type == "landing" ? route("$arg2.landing") : route("$arg2.show",$model->slug);
 
+                echo $arg4;
+
                 if($arg4 == "type") {
                     $route = route("$arg2.show",[$model->type,$model->slug]);
                 }
+
+                echo $route;
 
                 echo "<a target=\"_blank\" data-toggle=\"tooltip\" title=\"Preview\" href=\"".$route."\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
             ?>';
