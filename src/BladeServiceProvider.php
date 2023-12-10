@@ -182,7 +182,7 @@ class BladeServiceProvider extends ServiceProvider //Change class name here
 
                 echo $route;
 
-                echo "<a target=\"_blank\" data-toggle=\"tooltip\" title=\"Preview\" href=\"".$route."\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
+                // echo "<a target=\"_blank\" data-toggle=\"tooltip\" title=\"Preview\" href=\"".$route."\" data-toggle=\"tooltip\" title=\"Preview\" class=\"btn btn-sm btn-icon-sm\"><i class=\"far fa-external-link\"></i></a>";
             ?>';
         });
 
