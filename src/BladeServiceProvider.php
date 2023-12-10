@@ -172,7 +172,7 @@ class BladeServiceProvider extends ServiceProvider //Change class name here
                 list($arg1, $arg2, $arg3, $arg4) = explode(\',\',str_replace([\'(\',\')\',\' \'], \'\', ' . $expression . '));
                 $model = $arg3::find($arg1);
                 $model_type = $model->type;
-                if($arg4 == "type") {
+                if($arg4 == "type") { 
                     $route = route("$arg2.show",[$model->type,$model->slug]);
                 } else {
                     $route = $model_type == "landing" ? route("$arg2.landing") : route("$arg2.show",$model->slug);
