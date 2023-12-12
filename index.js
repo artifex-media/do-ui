@@ -286,24 +286,6 @@ $('._resource-action').click(function(e) {
 
 
 
-// Other functions
-
-    // Tooltip (bootstrap, must be included in app itself, not this ui)
-    $('[data-toggle="tooltip"]').tooltip();
-
-
-    // Datetimepicker (bootstrap, must be included in app itself, not this ui)
-    $('.datetimepicker').datetimepicker({
-         format: 'yyyy-mm-dd hh:ii:00',
-    });
-
-    // Datepicker, must be included in app itself, not this ui
-    $( ".datepicker" ).datepicker({
-        dateFormat: 'dd-mm-yy',
-        firstDay: 1,
-    });
-
-
 
 
 
@@ -388,6 +370,27 @@ while ((element2 = elements2.getItem(i2++))) {
 
 
 }
+
+
+
+
+
+// Other functions
+
+    // Tooltip (bootstrap, must be included in app itself, not this ui)
+    $('[data-toggle="tooltip"]').tooltip();
+
+
+    // Datepicker, must be included in app itself, not this ui
+    $( ".datepicker" ).datepicker({
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+    });
+
+    // Datetimepicker (bootstrap, must be included in app itself, not this ui)
+    $('.datetimepicker').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:00',
+    });
 
 
 }
