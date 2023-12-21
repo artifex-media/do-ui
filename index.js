@@ -204,6 +204,7 @@ $('._resource-action').click(function(e) {
         $('select.form-control').each(function(i, obj) {
             var This = $(this);
             var Select = [];
+            var Multiple = $(this).attr('multiple');
             Select[i] = new SlimSelect({
                 select: obj,
                 searchingText: This.attr('data-searching'),
@@ -211,6 +212,10 @@ $('._resource-action').click(function(e) {
                 searchPlaceholder: This.attr('data-placeholder'),
                 searchText: This.attr('data-noresults'),
                 placeholder: 'Choose',
+                settings: {
+                    allowDeselect: (typeof Multiple !== 'undefined' && Multiple !== false),
+                    closeOnSelect: !(typeof Multiple !== 'undefined' && Multiple !== false)
+                }
             });
         });
     }
@@ -228,6 +233,9 @@ $('._resource-action').click(function(e) {
         });
 
     // Reposition models
+    $('.is-sortable').sortable({
+    });
+
     $('.sortable tbody').sortable({
         'containment': 'parent',
         'helper': fixHelper,
@@ -284,6 +292,24 @@ $('._resource-action').click(function(e) {
 
 });
 
+
+
+// Other functions
+
+    // Tooltip (bootstrap, must be included in app itself, not this ui)
+    $('[data-toggle="tooltip"]').tooltip();
+
+
+    // Datetimepicker (bootstrap, must be included in app itself, not this ui)
+    $('.datetimepicker').datetimepicker({
+         format: 'yyyy-mm-dd hh:ii:00',
+    });
+
+    // Datepicker, must be included in app itself, not this ui
+    $( ".datepicker" ).datepicker({
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+    });
 
 
 
@@ -370,27 +396,6 @@ while ((element2 = elements2.getItem(i2++))) {
 
 
 }
-
-
-
-
-
-// Other functions
-
-    // Tooltip (bootstrap, must be included in app itself, not this ui)
-    $('[data-toggle="tooltip"]').tooltip();
-
-
-    // Datepicker, must be included in app itself, not this ui
-    $( ".datepicker" ).datepicker({
-        dateFormat: 'dd-mm-yy',
-        firstDay: 1,
-    });
-
-    // Datetimepicker (bootstrap, must be included in app itself, not this ui)
-    $('.datetimepicker').datetimepicker({
-        format: 'yyyy-mm-dd hh:ii:00',
-    });
 
 
 }
