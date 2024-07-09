@@ -55,68 +55,53 @@ class ResourceController extends Controller
 
     public function duplicate()
     {
-
         $new_model = $this->model->replicate(['media']);
         
-        $new_model->title = str_replace(' (duplicate)','',$new_model->title).' (duplicate)';
+        $new_model->title = str_replace(' (duplicate)', '', $new_model->title) . ' (duplicate)';
         $new_model->status = is_int($this->model->status) ? 0 : 'inactive';
-
-        if(Schema::hasColumn($new_model->getTable(), 'uuid')) {
+    
+        if (Schema::hasColumn($new_model->getTable(), 'uuid')) {
             $new_model->uuid = Str::uuid();
         }
-
-        if(Schema::hasColumn($new_model->getTable(), 'slug')) {
-            $new_model->slug = $this->model->slug.'-dup-'.$this->model->where('archive',0)->count();
+    
+        if (Schema::hasColumn($new_model->getTable(), 'slug')) {
+            $new_model->slug = $this->model->slug . '-dup-' . $this->model->where('archive', 0)->count();
         }
-
-        if(Schema::hasColumn($new_model->getTable(), 'permalink')) {
-            $new_model->permalink = 'https://duplicate-'.$this->model->where('archive',0)->count().'.nl';
+    
+        if (Schema::hasColumn($new_model->getTable(), 'permalink')) {
+            $new_model->permalink = 'https://duplicate-' . $this->model->where('archive', 0)->count() . '.nl';
         }
-
-        if(Schema::hasColumn($new_model->getTable(), 'custom_domain')) {
-            $new_model->custom_domain = 'https://duplicate-'.$this->model->where('archive',0)->count().'.nl';
+    
+        if (Schema::hasColumn($new_model->getTable(), 'custom_domain')) {
+            $new_model->custom_domain = 'https://duplicate-' . $this->model->where('archive', 0)->count() . '.nl';
         }
-
-        $result = $new_model->push();
+    
+        $new_model->push();
         $new_model->save();
-
-        $relationships = ['fields','faqs', 'deals', 'tags','rewards', 'brands', 'childs','pages','menus','links'];
-        foreach ($relationships as $relationship) {
-            $foreign = substr_replace($relationship,"",-1).'_id';
-            $foreign_this = substr_replace($this->model->getTable(),"",-1).'_id';
-
-
-            if (method_exists($this->model, $relationship) && $this->model->$relationship()->exists() && count($this->model->$relationship)) {
-                foreach($this->model->$relationship as $item) {
-                    $new_item = $item->replicate();
-                    $new_item->save();
-
-                    // TODO; recursive relationship. Brand > Menus > Links. Now only Menus can be replicated.
-                    if(Schema::hasColumn($new_item->getTable(), $foreign_this)) {
-                        $new_item->$foreign_this = $new_model->id; // @TODO; Fix foreign keys! deal_id, menu_id, etc.
-                    } 
-                    $new_item->save();
-
-                }
+    
+        // Get all relationships dynamically
+        $relationships = $this->model->getRelations();
+    
+        foreach ($relationships as $relationship => $items) {
+            foreach ($items as $item) {
+                $new_item = $item->replicate();
+                $foreign_key = $this->model->getForeignKey();
+                $new_item->$foreign_key = $new_model->id;
+                $new_item->save();
             }
         }
-
-        if($this->model->cats) {
-            foreach($this->model->cats as $cat)
-            {
+    
+        if ($this->model->cats) {
+            foreach ($this->model->cats as $cat) {
                 $new_model->cats()->attach($cat);
             }
         }
-
-        // if($this->model->tags) {
-        //     $new_model->tags()->saveMany($this->model->tags);
-        // }
-        // $new_model->save();
-
+    
         \Session::flash('success-message', 'Successfully duplicated!');
-
-        return $result ? 'true' : 'false';
+    
+        return $new_model->exists ? 'true' : 'false';
     }
+    
 
     
 
