@@ -56,7 +56,7 @@ class ResourceController extends Controller
     public function duplicate()
     {
         $new_model = $this->model->replicate(['media']);
-        
+    
         $new_model->title = str_replace(' (duplicate)', '', $new_model->title) . ' (duplicate)';
         $new_model->status = is_int($this->model->status) ? 0 : 'inactive';
     
@@ -88,6 +88,19 @@ class ResourceController extends Controller
                 $foreign_key = $this->model->getForeignKey();
                 $new_item->$foreign_key = $new_model->id;
                 $new_item->save();
+    
+                // Check if Spatie MediaLibrary traits are used
+                if (class_exists('Spatie\MediaLibrary\InteractsWithMedia') && class_exists('Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia')) {
+                    if ($new_item instanceof \Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia || in_array(\Spatie\MediaLibrary\InteractsWithMedia::class, class_uses($new_item))) {
+                        foreach ($item->getMedia() as $media) {
+                            $mediaCopy = $media->replicate();
+                            $mediaCopy->model_id = $new_item->id;
+                            $mediaCopy->save();
+                            // Optionally, you can also copy the actual media file:
+                            // $mediaCopy->copyTo($new_item, 'your_media_collection_name');
+                        }
+                    }
+                }
             }
         }
     
@@ -101,6 +114,7 @@ class ResourceController extends Controller
     
         return $new_model->exists ? 'true' : 'false';
     }
+    
     
 
     
