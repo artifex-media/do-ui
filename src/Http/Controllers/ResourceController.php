@@ -84,20 +84,27 @@ class ResourceController extends Controller
     
         foreach ($relationships as $relationship => $items) {
             foreach ($items as $item) {
-                $new_item = $item->replicate();
+                // Check if the related model can handle media
+                if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
+                    $new_item = $item->replicate(['media']);
+                } else {
+                    $new_item = $item->replicate();
+                }
+    
                 $foreign_key = $this->model->getForeignKey();
                 $new_item->$foreign_key = $new_model->id;
                 $new_item->save();
     
-                // Check if the related model uses Spatie MediaLibrary traits (for versions v7 and v8)
-                if ($new_item instanceof \Spatie\MediaLibrary\HasMedia\HasMediaTrait || in_array(\Spatie\MediaLibrary\InteractsWithMedia::class, class_uses($new_item))) {
-                    foreach ($item->getMedia() as $media) {
-                        $mediaCopy = $media->replicate();
-                        $mediaCopy->model_id = $new_item->id;
-                        $mediaCopy->save();
-                        // Optionally, you can also copy the actual media file:
-                        // $mediaCopy->copyTo($new_item, 'your_media_collection_name');
-                    }
+                if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
+                    foreach ($item->media as $media) {
+                    assert($media instanceof \Spatie\MediaLibrary\Models\Media);
+                    $props = $media->toArray();
+                    unset($props['id']);
+                    $new_item->addMedia($media->getPath())
+                        ->preservingOriginal()
+                        ->withProperties($props)
+                        ->toMediaCollection($media->collection_name);
+                }
                 }
             }
         }
@@ -112,6 +119,7 @@ class ResourceController extends Controller
     
         return $new_model->exists ? 'true' : 'false';
     }
+    
     
     
 
