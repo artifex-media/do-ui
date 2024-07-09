@@ -96,15 +96,17 @@ class ResourceController extends Controller
                 $new_item->save();
     
                 if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
-                    foreach ($item->media as $media) {
-                    assert($media instanceof \Spatie\MediaLibrary\Models\Media);
-                    $props = $media->toArray();
-                    unset($props['id']);
-                    $new_item->addMedia($media->getPath())
-                        ->preservingOriginal()
-                        ->withProperties($props)
-                        ->toMediaCollection($media->collection_name);
-                }
+                    if(!$item->media->isEmpty()) {
+                        foreach ($item->media as $media) {
+                            assert($media instanceof \Spatie\MediaLibrary\Models\Media);
+                            $props = $media->toArray();
+                            unset($props['id']);
+                            $new_item->addMedia($media->getPath())
+                                ->preservingOriginal()
+                                ->withProperties($props)
+                                ->toMediaCollection($media->collection_name);
+                        }
+                    }
                 }
             }
         }
