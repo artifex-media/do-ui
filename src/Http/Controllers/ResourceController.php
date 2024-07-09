@@ -55,7 +55,12 @@ class ResourceController extends Controller
 
     public function duplicate()
     {
-        $new_model = $this->model->replicate(['media']);
+        
+        if (method_exists($this->model, 'registerMediaConversions') || method_exists($this->model, 'addMedia')) {
+            $new_model = $this->model->replicate(['media']);
+        } else {
+            $new_model = $this->model->replicate();
+        }
     
         $new_model->title = str_replace(' (duplicate)', '', $new_model->title) . ' (duplicate)';
         $new_model->status = is_int($this->model->status) ? 0 : 'inactive';
@@ -78,7 +83,7 @@ class ResourceController extends Controller
     
         $new_model->push();
         $new_model->save();
-    
+
         // Get all relationships dynamically
         $relationships = $this->model->getRelations();
     
@@ -95,16 +100,22 @@ class ResourceController extends Controller
                 $new_item->$foreign_key = $new_model->id;
                 $new_item->save();
     
+                // Check if the related model has media and duplicate if applicable
                 if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
-                    if(!$item->media->isEmpty()) {
+                    if (!$item->media->isEmpty()) {
                         foreach ($item->media as $media) {
                             assert($media instanceof \Spatie\MediaLibrary\Models\Media);
-                            $props = $media->toArray();
-                            unset($props['id']);
-                            $new_item->addMedia($media->getPath())
-                                ->preservingOriginal()
-                                ->withProperties($props)
-                                ->toMediaCollection($media->collection_name);
+                            // Check if media file exists physically
+
+                            $path = $media->getPath();
+                            if (\Illuminate\Support\Facades\File::exists($path)) {
+                                $props = $media->toArray();
+                                unset($props['id']);
+                                $new_item->addMedia($media->getPath())
+                                    ->preservingOriginal()
+                                    ->withProperties($props)
+                                    ->toMediaCollection($media->collection_name);
+                            }
                         }
                     }
                 }
@@ -116,11 +127,30 @@ class ResourceController extends Controller
                 $new_model->cats()->attach($cat);
             }
         }
+
+        if (method_exists($this->model, 'registerMediaConversions') || method_exists($this->model, 'addMedia')) {
+            if (!$this->model->media->isEmpty()) {
+                foreach ($this->model->media as $model_media) {
+                    // Check if media file exists physically
+
+                    $model_path = $model_media->getPath();
+                    if (\Illuminate\Support\Facades\File::exists($model_path)) {
+                        $model_props = $model_media->toArray();
+                        unset($model_props['id']);
+                        $new_model->addMedia($model_media->getPath())
+                            ->preservingOriginal()
+                            ->withProperties($model_props)
+                            ->toMediaCollection($model_media->collection_name);
+                    }
+                }
+            }
+        }
     
         \Session::flash('success-message', 'Successfully duplicated!');
     
         return $new_model->exists ? 'true' : 'false';
     }
+    
     
     
     
