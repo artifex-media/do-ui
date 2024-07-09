@@ -89,16 +89,14 @@ class ResourceController extends Controller
                 $new_item->$foreign_key = $new_model->id;
                 $new_item->save();
     
-                // Check if Spatie MediaLibrary traits are used
-                if (class_exists('Spatie\MediaLibrary\InteractsWithMedia') && class_exists('Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia')) {
-                    if ($new_item instanceof \Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia || in_array(\Spatie\MediaLibrary\InteractsWithMedia::class, class_uses($new_item))) {
-                        foreach ($item->getMedia() as $media) {
-                            $mediaCopy = $media->replicate();
-                            $mediaCopy->model_id = $new_item->id;
-                            $mediaCopy->save();
-                            // Optionally, you can also copy the actual media file:
-                            // $mediaCopy->copyTo($new_item, 'your_media_collection_name');
-                        }
+                // Check if the related model uses Spatie MediaLibrary traits (for versions v7 and v8)
+                if ($new_item instanceof \Spatie\MediaLibrary\HasMedia\HasMediaTrait || in_array(\Spatie\MediaLibrary\InteractsWithMedia::class, class_uses($new_item))) {
+                    foreach ($item->getMedia() as $media) {
+                        $mediaCopy = $media->replicate();
+                        $mediaCopy->model_id = $new_item->id;
+                        $mediaCopy->save();
+                        // Optionally, you can also copy the actual media file:
+                        // $mediaCopy->copyTo($new_item, 'your_media_collection_name');
                     }
                 }
             }
