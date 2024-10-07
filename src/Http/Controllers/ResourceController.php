@@ -104,6 +104,14 @@ class ResourceController extends Controller
                     $foreign_key = $this->model->getForeignKey();
                     $new_item->$foreign_key = $new_model->id;
                     $new_item->save();
+
+                    // Duplicate meta fields for related model if using Metable
+                    if (in_array('Zoha\\Metable', class_uses($item))) {
+                        $meta = $item->meta()->get();
+                        foreach ($meta as $metaItem) {
+                            $new_item->setMeta($metaItem->key, $metaItem->value);
+                        }
+                    }
         
                     // Check if the related model has media and duplicate if applicable
                     if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
