@@ -84,40 +84,54 @@ class ResourceController extends Controller
         $new_model->push();
         $new_model->save();
 
-        // Get all relationships dynamically
-        $relationships = $this->model->getRelations();
-    
-        foreach ($relationships as $relationship => $items) {
-            foreach ($items as $item) {
-                // Check if the related model can handle media
-                if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
-                    $new_item = $item->replicate(['media']);
-                } else {
-                    $new_item = $item->replicate();
-                }
-    
-                $foreign_key = $this->model->getForeignKey();
-                $new_item->$foreign_key = $new_model->id;
-                $new_item->save();
-    
-                // Check if the related model has media and duplicate if applicable
-                if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
-                    if (!$item->media->isEmpty()) {
-                        foreach ($item->media as $media) {
-                            assert($media instanceof \Spatie\MediaLibrary\Models\Media);
-                            // Check if media file exists physically
+        $relationships = ['fields','faqs', 'deals', 'tags','rewards', 'brands', 'childs','pages','menus','links','settings','packages','blocks','partners','incentives'];
+        foreach ($relationships as $relationship) {
 
-                            $path = $media->getPath();
-                            if (\Illuminate\Support\Facades\File::exists($path)) {
-                                $props = $media->toArray();
-                                unset($props['id']);
-                                $new_item->addMedia($media->getPath())
-                                    ->preservingOriginal()
-                                    ->withProperties($props)
-                                    ->toMediaCollection($media->collection_name);
+            $foreign = substr_replace($relationship,"",-1).'_id';
+            $foreign_this = substr_replace($this->model->getTable(),"",-1).'_id';
+
+
+            if (method_exists($this->model, $relationship) && $this->model->$relationship()->exists() && count($this->model->$relationship)) {
+                foreach($this->model->$relationship as $item) {
+
+                    // Check if the related model can handle media
+                    if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
+                        $new_item = $item->replicate(['media']);
+                    } else {
+                        $new_item = $item->replicate();
+                    }
+        
+                    $foreign_key = $this->model->getForeignKey();
+                    $new_item->$foreign_key = $new_model->id;
+                    $new_item->save();
+        
+                    // Check if the related model has media and duplicate if applicable
+                    if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
+                        if (!$item->media->isEmpty()) {
+                            foreach ($item->media as $media) {
+                                // Check if the media is an instance of either class
+                                if (!($media instanceof \Spatie\MediaLibrary\MediaCollections\Models\Media || $media instanceof \Spatie\MediaLibrary\Models\Media)) {
+                                    throw new \Exception("Unexpected media type: " . get_class($media));
+                                }
+                    
+                                $path = $media->getPath();
+                    
+                                if (\Illuminate\Support\Facades\File::exists($path)) {
+                                    $props = $media->toArray();
+                    
+                                    // Remove non-existent fields and the uuid to prevent duplicate entries
+                                    unset($props['id'], $props['uuid'], $props['original_url'], $props['preview_url']);
+                    
+                                    $new_item->addMedia($media->getPath())
+                                        ->preservingOriginal()
+                                        ->withProperties($props)
+                                        ->toMediaCollection($media->collection_name);
+                                }
                             }
                         }
                     }
+                    
+                    
                 }
             }
         }
@@ -150,12 +164,6 @@ class ResourceController extends Controller
     
         return $new_model->exists ? 'true' : 'false';
     }
-    
-    
-    
-    
-
-    
 
     public function reposition()
     {
