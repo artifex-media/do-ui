@@ -103,6 +103,11 @@ class ResourceController extends Controller
         
                     $foreign_key = $this->model->getForeignKey();
                     $new_item->$foreign_key = $new_model->id;
+
+                    if (Schema::hasColumn($new_item->getTable(), 'uuid')) {
+                        $new_item->uuid = Str::uuid();
+                    }
+
                     $new_item->save();
 
                     // Duplicate meta fields for related model if using Metable
