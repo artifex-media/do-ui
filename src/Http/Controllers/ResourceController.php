@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\File;
 
 // Ajax Only controller!
 class ResourceController extends Controller
@@ -119,22 +120,33 @@ class ResourceController extends Controller
                     }
         
                     // Check if the related model has media and duplicate if applicable
+
                     if (method_exists($item, 'registerMediaConversions') || method_exists($item, 'addMedia')) {
                         if (!$item->media->isEmpty()) {
                             foreach ($item->media as $media) {
-                                // Check if the media is an instance of either class
                                 if (!($media instanceof \Spatie\MediaLibrary\MediaCollections\Models\Media || $media instanceof \Spatie\MediaLibrary\Models\Media)) {
                                     throw new \Exception("Unexpected media type: " . get_class($media));
                                 }
-                    
+
                                 $path = $media->getPath();
-                    
-                                if (\Illuminate\Support\Facades\File::exists($path)) {
+
+                                if (File::exists($path)) {
                                     $props = $media->toArray();
-                    
-                                    // Remove non-existent fields and the uuid to prevent duplicate entries
-                                    unset($props['id'], $props['uuid'], $props['original_url'], $props['preview_url']);
-                    
+
+                                    // Dynamically check if columns exist in the table
+                                    $tableColumns = Schema::getColumnListing('media');
+
+                                    // Remove non-existent fields
+                                    foreach (['original_url', 'preview_url'] as $field) {
+                                        if (!in_array($field, $tableColumns)) {
+                                            unset($props[$field]);
+                                        }
+                                    }
+
+                                    // Remove 'id' to avoid duplication and generate a new UUID
+                                    unset($model_props['id'], $model_props['uuid']);
+                                    $model_props['uuid'] = (string) Str::uuid(); // Assign a new UUID
+
                                     $new_item->addMedia($media->getPath())
                                         ->preservingOriginal()
                                         ->withProperties($props)
@@ -143,6 +155,7 @@ class ResourceController extends Controller
                             }
                         }
                     }
+
                     
                     
                 }
@@ -158,12 +171,26 @@ class ResourceController extends Controller
         if (method_exists($this->model, 'registerMediaConversions') || method_exists($this->model, 'addMedia')) {
             if (!$this->model->media->isEmpty()) {
                 foreach ($this->model->media as $model_media) {
-                    // Check if media file exists physically
-
+                    // Check if the media file exists physically
                     $model_path = $model_media->getPath();
-                    if (\Illuminate\Support\Facades\File::exists($model_path)) {
+                    if (File::exists($model_path)) {
                         $model_props = $model_media->toArray();
-                        unset($model_props['id']);
+        
+                        // Dynamically check if specific columns exist in the 'media' table
+                        $tableColumns = Schema::getColumnListing('media');
+        
+                        // Remove fields that may not exist in the database schema
+                        foreach (['original_url', 'preview_url'] as $field) {
+                            if (!in_array($field, $tableColumns)) {
+                                unset($model_props[$field]);
+                            }
+                        }
+        
+                        // Remove 'id' to avoid duplication and generate a new UUID
+                        unset($model_props['id'], $model_props['uuid']);
+                        $model_props['uuid'] = (string) Str::uuid(); // Assign a new UUID
+                        
+        
                         $new_model->addMedia($model_media->getPath())
                             ->preservingOriginal()
                             ->withProperties($model_props)
