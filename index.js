@@ -317,6 +317,7 @@ $('._resource-action').click(function(e) {
 
 
   // CKEditor
+  if(jQuery('.has-editor').length > 0) {
   var elements = CKEDITOR.document.find('.has-editor'),
   i = 0,
   element;
@@ -398,6 +399,7 @@ while ((element2 = elements2.getItem(i2++))) {
 }
 
 
+}
 }
 
 
