@@ -15,6 +15,12 @@ class ResourceController extends Controller
     private $resource_request,$model, $model_type, $model_id, $newPosition, $modelImageCollection, $action;
 
     public function __construct(Request $request) {
+
+        // Prevent execution if running an Artisan command
+        if (app()->runningInConsole()) {
+            return;
+        }
+
         $this->model_type = $request->get('model');
         $this->model_id = $request->get('id');
         $this->action = $request->get('action');
