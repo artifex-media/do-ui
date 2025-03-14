@@ -213,6 +213,7 @@ $('._resource-action').click(function(e) {
                 searchText: This.attr('data-noresults'),
                 placeholder: 'Choose',
                 settings: {
+                    placeholderText: This.attr('data-placeholder-text'),
                     allowDeselect: (typeof Multiple !== 'undefined' && Multiple !== false),
                     closeOnSelect: !(typeof Multiple !== 'undefined' && Multiple !== false)
                 }
